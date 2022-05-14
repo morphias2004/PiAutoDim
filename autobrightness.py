@@ -3,11 +3,11 @@
 # Based on https://gpiozero.readthedocs.io/en/stable/recipes.html#light-sensor
 
 from gpiozero import LightSensor
-from time import sleep
+import time
 
 # Desired maximum & minimum backlight values
 max = 255
-min = 12
+min = 30
 prev = 0
 offset = 10
 delta = 0
@@ -23,7 +23,7 @@ while True:
     lightValue = round(255 * sensor.value + offset)
 
     # Keep values within defined maximum-minimum values
-    if lightValue > 240:
+    if lightValue > 220:
         lightValue = max
     if lightValue < min:
         lightValue = min
@@ -37,4 +37,4 @@ while True:
         f.seek(0)
         f.write(str(lightValue))
         f.truncate()
-sleep(1)
+    time.sleep(1)
