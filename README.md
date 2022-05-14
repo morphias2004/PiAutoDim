@@ -32,55 +32,32 @@ The photoresistor is not polarity sensitive, so you can connect the 3.3V line to
 
 Install GPIO Zero
 
-'sudo pip3 install gpiozero'
-
-Copy the autobrightness.py file to ~/PiAutoDim
+`sudo pip3 install gpiozero`
 
 For Waveshare screens, the backlight range is inverted when compared to an official RPi screen. 255-0 instead of 0-255.
 
-To deal with this, the logic needs to be inverted.
+To deal with this, the logic needs to be inverted. Use the 'wvautobrightness.py' file instead. 
 
-nano autobrightness.py
-
-max needs to be changed to 0
-min needs to be changed to 230
-offset is no longer required/used, so just leave it as is
-
-The following line needs to go from:
-
-'lightValue = round(255 * sensor.value + offset)'
-
-to 
-
-'lightValue = round(255-(255 * sensor.value))'
-
-Also, the path for the file the Waveshare screen uses for the brightness integer is in a different location, so the
-following line needs to change from:
-
-'f = open('/sys/class/backlight/rpi_backlight/brightness', 'w')'
-
-to
-
-'f = open('/sys/waveshare/rpi_backlight/brightness', 'w')'
+Copy the 'autobrightness.py' file to '~/PiAutoDim' If using the 'wvautobrightness.py' file, rename it to 'autobrightness.py' before copying it over.
 
 Permissions on the 'brightness' file are not retained between reboots, so it needs to have the permissions added
 at boot.
 
-'crontab -e'
+`crontab -e`
 
 add the line for the RPi display
 
-'@reboot sudo chmod 766 /sys/class/backlight/rpi_backlight/brightness'
+`@reboot sudo chmod 766 /sys/class/backlight/rpi_backlight/brightness`
 
 or for the Waveshare display
 
-'@reboot sudo chmod 766 /sys/waveshare/rpi_backlight/brightness'
+`@reboot sudo chmod 766 /sys/waveshare/rpi_backlight/brightness`
 
-and to make the script run in the background, also add
+and to make the script run in the background on boot, also add
 
-'@reboot python3 ~/PiAutoDim/autobrightness.py'
+`@reboot python3 ~/PiAutoDim/autobrightness.py`
 
-Adjust the amount of light falling on the Cds sensor. The backlight level should change accordingly.
+The backlighting with adjust dynamically based on the amount of light falling on the sensor. The default update interval is 1 second.
 
 ### License
 
