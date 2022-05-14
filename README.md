@@ -32,7 +32,7 @@ The photoresistor is not polarity sensitive, so you can connect the 3.3V line to
 
 Install GPIO Zero
 
-sudo pip3 install gpiozero
+'sudo pip3 install gpiozero'
 
 Copy the autobrightness.py file to ~/PiAutoDim
 
@@ -48,38 +48,37 @@ offset is no longer required/used, so just leave it as is
 
 The following line needs to go from:
 
-lightValue = round(255 * sensor.value + offset)
+'lightValue = round(255 * sensor.value + offset)'
 
 to 
 
-lightValue = round(255-(255 * sensor.value))
+'lightValue = round(255-(255 * sensor.value))'
 
 Also, the path for the file the Waveshare screen uses for the brightness integer is in a different location, so the
 following line needs to change from:
 
-f = open('/sys/class/backlight/rpi_backlight/brightness', 'w')
+'f = open('/sys/class/backlight/rpi_backlight/brightness', 'w')'
 
 to
 
-f = open('/sys/waveshare/rpi_backlight/brightness', 'w')
+'f = open('/sys/waveshare/rpi_backlight/brightness', 'w')'
 
 Permissions on the 'brightness' file are not retained between reboots, so it needs to have the permissions added
 at boot.
 
-crontab -e
+'crontab -e'
 
 add the line for the RPi display
 
-@reboot sudo chmod 766 /sys/class/backlight/rpi_backlight/brightness
+'@reboot sudo chmod 766 /sys/class/backlight/rpi_backlight/brightness'
 
 or for the Waveshare display
 
-@reboot sudo chmod 766 /sys/waveshare/rpi_backlight/brightness
+'@reboot sudo chmod 766 /sys/waveshare/rpi_backlight/brightness'
 
 and to make the script run in the background, also add
 
-@reboot python3 ~/PiAutoDim/autobrightness.py
-`systemctl status autobrightness.service`
+'@reboot python3 ~/PiAutoDim/autobrightness.py'
 
 Adjust the amount of light falling on the Cds sensor. The backlight level should change accordingly.
 
