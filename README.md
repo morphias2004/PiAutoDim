@@ -1,6 +1,6 @@
 # PiAutoDim
 ![image](https://github.com/dandydanny/PiAutoDim/blob/master/screenshot.gif)
-Based on the iriginal from @dandydanny
+Based on the original from @dandydanny
 
 Auto-Dimming for the Official RPi and Waveshare DSI Touchscreens
 
