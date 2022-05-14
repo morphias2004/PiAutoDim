@@ -36,11 +36,11 @@ Install GPIO Zero
 
 For Waveshare screens, the backlight range is inverted when compared to an official RPi screen. 255-0 instead of 0-255.
 
-To deal with this, the logic needs to be inverted. Use the 'wvautobrightness.py' file instead. 
+To deal with this, the logic needs to be inverted. Use the `wvautobrightness.py` file instead. 
 
-Copy the 'autobrightness.py' file to '~/PiAutoDim' If using the 'wvautobrightness.py' file, rename it to 'autobrightness.py' before copying it over.
+Copy the `autobrightness.py` file to `~/PiAutoDim` If using the `wvautobrightness.py` file, rename it to `autobrightness.py` before copying it over.
 
-Permissions on the 'brightness' file are not retained between reboots, so it needs to have the permissions added
+Permissions on the `brightness` file are not retained between reboots, so it needs to have the permissions added
 at boot.
 
 `crontab -e`
