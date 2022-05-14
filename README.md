@@ -26,8 +26,7 @@ You can use either 3.3V pin (1 or 17) on the GPIO header, any GND (6, 9, 14, 20,
 
 The photoresistor is not polarity sensitive, so you can connect the 3.3V line to either leg. The capacitor is polarity sensitive, so the positive leg needs to be connected to the same wire as the second leg on the photoresitor and both terminate at pin 12 on the RPi. The negative leg can go to any vailable GND.
 
-
-
+![image](https://github.com/morphias2004/PiAutoDim/blob/master/Wiring%20Diagram.PNG)
 
 ### Software Setup
 
