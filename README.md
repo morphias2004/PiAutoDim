@@ -1,83 +1,85 @@
 # PiAutoDim
 ![image](https://github.com/dandydanny/PiAutoDim/blob/master/screenshot.gif)
-Auto-Dimming for the Raspberry-Pi 7" Touchscreen LCD Display
+Based on the iriginal from @dandydanny
+
+Auto-Dimming for the Official RPi and Waveshare DSI Touchscreens
+
+Some minor code fixes and added a version for the Waveshare DSI displays, which work the same as the RPi screens, but the dimming logic is inverted. That is , 255-0 instead of 0-255 with 255 being the darket instead of the brightest setting.
+
 
 ### What?
-Code and schematic diagram to automatically dim the backlight of the Raspberry-Pi Official 7" Touchscreen LCD display. Based on [this light-sensor example](https://gpiozero.readthedocs.io/en/stable/recipes.html#light-sensor) from [GPIO Zero](https://www.raspberrypi.org/blog/gpio-zero-a-friendly-python-api-for-physical-computing/).
+Code and schematic diagram to automatically dim the backlight of the Official RPi and Waveshare DSI Touchscreens. Based on [this light-sensor example](https://gpiozero.readthedocs.io/en/stable/recipes.html#light-sensor) from [GPIO Zero](https://www.raspberrypi.org/blog/gpio-zero-a-friendly-python-api-for-physical-computing/).
 
 ### Why?
-1. I don't want to be blinded by the bright LCD backlight at night
+1. I don't want to be blinded by the bright LCD backlight at night and don't want my kitchen lit up like Christmas
 1. Provide dynamic display brightness adjustment for optimal display contrast in all lighting conditions
-
-### Where?
-On my nightstand, but you can see how it works at this [demo link](https://twitter.com/dandydanny/status/1020504279797379072)
-
-### Changelog
-* v0.1 - Initial release
 
 ### Hardware Setup
 Parts needed:
 * [Cds photo cell / photoresistor](https://www.adafruit.com/product/161) ([photo transistor](https://www.adafruit.com/product/2831) OK)
-* 10µF 16V capacitor (if using 1µF, edit `charge_time_limit` argument in `autobrightness.py` so that the `charge_time_limit=0.01`)
+* Any 10µF capacitor - voltage doesn't matter. If using 1µF, edit `charge_time_limit` argument in `autobrightness.py` so that the `charge_time_limit=0.01`
 * [Female jumper wires](https://www.adafruit.com/product/1951)
 
 Connection diagram:
-![image](https://github.com/dandydanny/PiAutoDim/blob/master/connection.png)
+
+You can use either 3.3V pin (1 or 17) on the GPIO header, any GND (6, 9, 14, 20, 25, 30, 34 or 39) and pin 12 for the input.
+
+The photoresistor is not polarity sensitive, so you can connect the 3.3V line to either leg. The capacitor is polarity sensitive, so the positive leg needs to be connected to the same wire as the second leg on the photoresitor and both terminate at pin 12 on the RPi. The negative leg can go to any vailable GND.
+
+
+
 
 ### Software Setup
-#### Edit the backlight permissions file to allow read and write permissions to all users:
 
-`sudo nano /etc/udev/rules.d/backlight-permissions.rules`
+Install GPIO Zero
 
-Insert:
+sudo pip3 install gpiozero
 
-`SUBSYSTEM=="backlight",RUN+="/bin/chmod 666 /sys/class/backlight/%k/brightness /sys/class/backlight/%k/bl_power"`
+Copy the autobrightness.py file to ~/PiAutoDim
 
-#### Put `autobrightness.py` on your pi, in a directory called `PiAutoDim`:
+For Waveshare screens, the backlight range is inverted when compared to an official RPi screen. 255-0 instead of 0-255.
 
-`git clone https://github.com/dandydanny/PiAutoDim.git`
+To deal with this, the logic needs to be inverted.
 
-#### Enable autorun of `autobrightness.py` on boot, by making it a `systemd` service
+nano autobrightness.py
 
-In `/etc/systemd/system/`, make a `autobrightness.service` file.
+max needs to be changed to 0
+min needs to be changed to 230
+offset is no longer required/used, so just leave it as is
 
-`touch autobrightness.service`
+The following line needs to go from:
 
-Open this file in an editor:
+lightValue = round(255 * sensor.value + offset)
 
-`sudo nano autobrightness.service`
+to 
 
-Put in following:
-```
-[Unit]
-Description=Get auto brightness service running at boot
-After=mosquitto.service mysql.service
+lightValue = round(255-(255 * sensor.value))
 
-[Service]
-ExecStart=/usr/bin/python3 /home/pi/PiAutoDim/autobrightness.py
-Restart=always
-StandardOutput=syslog
-StandardError=syslog
-SyslogIdentifier=autobrightness
-User=pi
-Group=pi
+Also, the path for the file the Waveshare screen uses for the brightness integer is in a different location, so the
+following line needs to change from:
 
-[Install]
-WantedBy=multi-user.target
-```
+f = open('/sys/class/backlight/rpi_backlight/brightness', 'w')
 
-Press `CTRL-O` to save, and `CTRL-X` to exit nano editor.
+to
 
-Enable service to run on startup:
+f = open('/sys/waveshare/rpi_backlight/brightness', 'w')
 
-`sudo systemctl enable autobrightness.service`
+Permissions on the 'brightness' file are not retained between reboots, so it needs to have the permissions added
+at boot.
 
-Start autobrightness service (for current boot):
+crontab -e
 
-`sudo systemctl start autobrightness.service`
+add the line for the RPi display
 
-Check if it's running:
+@reboot sudo chmod 766 /sys/class/backlight/rpi_backlight/brightness
 
+or for the Waveshare display
+
+@reboot sudo chmod 766 /sys/waveshare/rpi_backlight/brightness
+
+and to make the script run in the background, also add
+
+@reboot python3 ~/PiAutoDim/autobrightness.py
 `systemctl status autobrightness.service`
 
 Adjust the amount of light falling on the Cds sensor. The backlight level should change accordingly.
@@ -87,4 +89,4 @@ Adjust the amount of light falling on the Cds sensor. The backlight level should
 MIT
 
 ### About
-Daniel is a web developer seeking opportunities, beverage socials, and late-night taco runs. [dandydanny.github.io](https://git.io/vxurG)
+http://www.ipind.com.au
