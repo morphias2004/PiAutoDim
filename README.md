@@ -2,7 +2,7 @@
 ![image](https://github.com/dandydanny/PiAutoDim/blob/master/screenshot.gif)
 Based on the original from @dandydanny  https://github.com/dandydanny
 
-Auto-Dimming for the Official RPi and Waveshare DSI Touchscreens
+Auto dimming for the Official RPi and Waveshare DSI Touchscreens
 
 Some minor code fixes and added a version for the Waveshare DSI displays, which work the same as the RPi screens, but the dimming logic is inverted. That is , 255-0 instead of 0-255 with 255 being the darket instead of the brightest setting.
 
