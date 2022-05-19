@@ -34,7 +34,7 @@ Install GPIO Zero
 
 `sudo pip3 install gpiozero`
 
-For Waveshare screens, the backlight range is inverted when compared to an official RPi screen. 255-0 instead of 0-255.
+For Waveshare 7" DSI screens, the backlight range is inverted when compared to an official RPi screen. 255-0 instead of 0-255.
 
 To deal with this, the logic needs to be inverted. Use the `wvautobrightness.py` file instead. 
 
